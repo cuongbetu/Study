@@ -33,6 +33,11 @@
 }
 
 
+span.text-right{
+  text-align: right;
+  align-items: right;
+}
+
 
 
 @keyframes App-logo-spin {
