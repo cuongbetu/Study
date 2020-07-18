@@ -32,10 +32,30 @@
   margin-top:50px ;
 }
 
+.mt-15{
+  margin-top:15px ;
+}
+
+.mt-5{
+  margin-top: 5px;
+}
+
+.mr-5{
+  margin-right: 5px;
+}
+
 
 span.text-right{
-  text-align: right;
-  align-items: right;
+  float: right;
+}
+
+.sort_selected::after {
+  content:  '\f00c';
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  margin-left: 10px;
+  display: inline-block;
 }
 
 
@@ -47,4 +67,9 @@ span.text-right{
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.cursor{
+  cursor: pointer;
 }
