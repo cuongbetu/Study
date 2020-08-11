@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import TaskItem from './TaskItem'
-
+import TaskItem from './TaskItem';
+import { connect } from 'react-redux'
+import * as actions from '../actions/index'
+import { filter } from 'lodash';
 class TaskList extends Component {
     constructor(){
         super()
@@ -14,9 +16,12 @@ class TaskList extends Component {
         let target = event.target;
         let name = target.name;
         let value = target.value;
+        let filter = {
+            name : name === 'filterName' ? value : this.state.filterName,
+            status : name === 'filterStatus' ? value : this.state.filterStatus
+        }
         this.props.onFilter(
-            name === 'filterName' ? value : this.state.filterName,
-            name === 'filterStatus' ? value : this.state.filterStatus
+            filter
         )
         this.setState({
             [name]  : value
@@ -25,16 +30,26 @@ class TaskList extends Component {
 
 
     render() {
-                // <TaskList tasks={taskState} onUpdateStatusApp = {this.onUpdateStatus}/>
-        var {tasks,onUpdateStatusApp,onDelete,onUpdate} = this.props;
+        var {taskList,filterValue} = this.props;
         var {filterName,filterStatus} = this.state;
-        var elm = tasks.map((task,index)=>{
+        if (filterValue.name) {
+            taskList = taskList.filter(task => {
+                return task.name.toLowerCase().indexOf(filterValue.name) !== -1;
+              });
+        }
+
+        taskList = taskList.filter(task => {
+            if (filterValue.status === -1) {
+                return task
+            }else{
+                return task.status === ( filterValue.status === 1 ? true : false );
+            }
+          });
+        
+        var elm = taskList.map((task,index)=>{
             return <TaskItem index={index} 
                             key={index} 
                             task={task}
-                            onUpdateStatusTaskList = {onUpdateStatusApp}
-                            onDelete = {onDelete}
-                            onUpdate = {onUpdate}    
                             />
         });
         return (
@@ -81,4 +96,20 @@ class TaskList extends Component {
     }
 }
 
-export default TaskList;
+//Lấy state từ store
+const mapStateToProps = (state) => {
+    return {
+        taskList : state.tasks,
+        filterValue : state.filterTask
+    }
+};
+
+const mapDispatchToProps = (dispatch,props) => {
+    return {
+        onFilter : (filterValue) => {
+            dispatch(actions.filterTask(filterValue));
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(TaskList);

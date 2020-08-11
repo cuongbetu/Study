@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux'
+import * as actions from '../actions/index';
 class TaskForm extends Component {
     constructor() {
         super()
         this.state = {
+            id : '',
             name: '',
             status: false
         }
@@ -11,36 +13,30 @@ class TaskForm extends Component {
 
     // Do du lieu cho form them cong viec, kiem tra ton tai truoc khi setState
     componentDidMount() {
-        if (this.props.taskEditing) {
+        if(this.props.editTask) {
             this.setState({
-                id: this.props.taskEditing.id,
-                name: this.props.taskEditing.name,
-                status: this.props.taskEditing.status
-            });
+                id: this.props.editTask.id,
+                name: this.props.editTask.name,
+                status: this.props.editTask.status
+            })
+        }
+        else{
+            this.onClear();
         }
     }
 
     componentWillReceiveProps = (nextProps) => {
-        if (nextProps && nextProps.taskEditing) {
+        if (nextProps && nextProps.editTask) {
             this.setState({
-                id: nextProps.taskEditing.id,
-                name: nextProps.taskEditing.name,
-                status: nextProps.taskEditing.status
+                id: nextProps.editTask.id,
+                name: nextProps.editTask.name,
+                status: nextProps.editTask.status
             });
         }
-        else if (!nextProps.taskEditing) {
-            this.setState({
-                id: '',
-                name: '',
-                status: false
-            });
+        else if (!nextProps.editTask) {
+            this.onClear();
         }
 
-    }
-
-
-    onHideForm = () => {
-        this.props.onCloseForm();
     }
 
     onChange = (event) => {
@@ -57,7 +53,7 @@ class TaskForm extends Component {
 
     onSubmit = (event) => {
         event.preventDefault();
-        this.props.onSubmit(this.state);
+        this.props.saveTask(this.state);
         this.onClear();
         // this.onHideForm();
     }
@@ -69,11 +65,13 @@ class TaskForm extends Component {
         });
     }
     render() {
+        const { onCloseForm,isDisplayForm } = this.props;
+        if (!isDisplayForm) return '';
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
-                    <h3 className="panel-title">{this.props.taskEditing ? "Chỉnh sửa công việc" : "Thêm công việc"}
-                        <span onClick={this.onHideForm} className="fa fa-times-circle text-right"></span>
+                    <h3 className="panel-title">{this.state.id ? "Chỉnh sửa công việc" : "Thêm công việc"}
+                        <span onClick={onCloseForm} className="fa fa-times-circle text-right"></span>
                     </h3>
                 </div>
                 <div className="panel-body">
@@ -99,7 +97,7 @@ class TaskForm extends Component {
 
                         <br />
                         <div className="text-center">
-                            <button type="submit" className="btn btn-warning">{this.props.taskEditing ? 'Sửa' : 'Thêm'}</button>&nbsp;
+                            <button type="submit" className="btn btn-warning">{this.state.id ? 'Edit' : 'Thêm'}</button>&nbsp;
                             <button
                                 onClick={this.onClear}
                                 type="reset"
@@ -112,4 +110,22 @@ class TaskForm extends Component {
     }
 }
 
-export default TaskForm;
+const mapStateToProps = state => {
+    return {
+        isDisplayForm : state.isDisplayForm,
+        editTask : state.editTask
+    }
+};
+
+const mapDispatchToProps = (dispatch,props) =>{
+    return {
+        saveTask: (task) => {
+            dispatch(actions.saveTask(task));
+        },
+        onCloseForm : () => {
+            dispatch(actions.closeForm());
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(TaskForm);

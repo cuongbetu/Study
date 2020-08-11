@@ -1,18 +1,25 @@
 import React, { Component } from 'react';
-
+import { connect } from 'react-redux'
+import * as actions from '../actions/index';
 class TaskItem extends Component {
 
     // Trả về ID cho TaskList -> App sau khi click vào span
     onUpdateStatusTaskItem = () => {
-        this.props.onUpdateStatusTaskList(this.props.task.id);
+        this.props.updateStatus(this.props.task.id);
     }
 
     onDelete = () => {
-        this.props.onDelete(this.props.task.id);
+        this.props.deleteTask(this.props.task.id);
+        this.props.editTask({
+            id : '',
+            name : '',
+            status : false
+        });
     }
 
     onUpdate = () => {
-        this.props.onUpdate(this.props.task.id);
+        this.props.onOpenForm();
+        this.props.editTask(this.props.task);
     }
     render() {
        var {task,index} = this.props;
@@ -32,7 +39,7 @@ class TaskItem extends Component {
                     type="button" 
                     className="btn btn-warning"
                     onClick={this.onUpdate}>
-                        <span className="fa fa-pencil mr-5"></span>Sửa
+                        <span className="fa fa-pencil mr-5"></span>Edit
                     </button>&nbsp;
                     <button
                     onClick = {this.onDelete} 
@@ -45,5 +52,29 @@ class TaskItem extends Component {
         );
     }
 }
+const mapStateToProps = (state) => {
+    return {
+    };
+}
 
-export default TaskItem;
+const mapDispatchToProps = (dispatch,props) =>{
+    return {
+        updateStatus : (id) => {
+            dispatch(actions.updateStatus(id))
+        },
+        deleteTask : (id) => {
+            dispatch(actions.deleteTask(id));
+        },
+        editTask : (task) => {
+            dispatch(actions.editTask(task));
+        },
+        onCloseForm : () => {
+            dispatch(actions.closeForm());
+        },
+        onOpenForm : () => {
+            dispatch(actions.openForm());
+        }
+    }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(TaskItem);
