@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../actions/index';
+import  '../App.css'
 
 
 class Search extends Component {
@@ -20,7 +23,15 @@ class Search extends Component {
         this.props.onSearch(this.state.keyWord);
     }
 
+    onClear = () => {
+        this.setState({
+            keyWord : ''
+        })
+    }
+
+
     render() {
+    
         return (
                 <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                     <div className="input-group">
@@ -31,11 +42,18 @@ class Search extends Component {
                         name="searchValue"
                         value = {this.state.keyWord}
                         onChange = {this.onChange} />
-                        <span className="input-group-btn">
+                        <span className= "input-group-btn">
                             <button className="btn btn-primary" 
                             type="button"
                             onClick={this.onSearch}>
-                                <span className="fa fa-search mr-5"></span>Tìm
+                                <span className="fa fa-search "></span>Tìm
+                            </button>
+                        </span>
+                        <span className="input-group-btn">
+                            <button className="btn btn-primary" 
+                            type="button"
+                            onClick={this.onClear}>
+                                <span></span>Xóa
                             </button>
                         </span>
                     </div>
@@ -44,4 +62,17 @@ class Search extends Component {
     }
 }
 
-export default Search;
+
+const mapStateToProps = (state) => {
+    return {
+    };
+}
+
+const mapDispatchToProps = (dispatch,props) => {
+    return{
+        onSearch : (keyword) => {
+          dispatch(actions.searchTask(keyword));
+      }
+    };
+  }
+  export default connect(mapStateToProps,mapDispatchToProps)(Search);

@@ -7,27 +7,6 @@ import * as actions from './actions/index'
 
 import './App.css';
 class App extends Component {
-  constructor() {
-    super()
-    this.state = {
-      taskSearch: ''.toLowerCase(),
-      sortBy : 'name',
-      sortValue : 1
-    }
-  }
-
-  onSearch = (keyword) => {
-    this.setState({
-      taskSearch: keyword
-    });
-  }
-
-  onClickSort =  async (name,value) => {
-      await this.setState({
-        sortBy: name,
-        sortValue: value
-      });
-  } 
 
   onToggleForm = () => {
       if(this.props.editTask) {
@@ -37,35 +16,12 @@ class App extends Component {
           status:false
         });
         this.props.openForm();
-      } else {
-        this.props.onToggleForm();
-      }
-      
   }
+}
 
   render() {
-    var { 
-        sortBy,
-        sortValue } = this.state;
 
     var { isDisplayForm } = this.props;
-   
-
-  //  
-  //  if (sortBy === 'name') {
-  //    taskState.sort((a,b) => {
-  //     if (a.name > b.name) return sortValue; //1
-  //     else if (a.name < b.name ) return -sortValue; //-1
-  //     return 0;
-  //     });
-  //  }
-  //  else{
-  //   taskState.sort((a,b) => {
-  //     if (a.status > b.status) return -sortValue;
-  //     else if (a.status < b.status ) return sortValue;
-  //     return 0;
-  //     });
-  //  }
 
     return (
       <div className="container">
@@ -84,11 +40,7 @@ class App extends Component {
               className="btn btn-primary mr-5">
               <span className="fa fa-plus mr-5"></span>Thêm Công Việc
                 </button>
-            <Control
-              onClickSort={this.onClickSort}
-              onSearch={this.onSearch}
-              sortBy = {sortBy}
-              sortValue={sortValue} />
+            <Control />
             <TaskList />
           </div>
         </div>
@@ -102,7 +54,6 @@ const mapStateToProps = (state) => {
       isDisplayForm : state.isDisplayForm
     };
 }
-
 
 const mapDispatchToProps = (dispatch,props) => {
   return{

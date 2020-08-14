@@ -2,7 +2,7 @@ import * as types from '../constant/ActionTypes';
 
 var initialState = {
     name : '',
-    status : -1
+    status : -1,
 };
 
 var myReducer = (state = initialState,action) => {

@@ -9,12 +9,19 @@ class TaskItem extends Component {
     }
 
     onDelete = () => {
-        this.props.deleteTask(this.props.task.id);
-        this.props.editTask({
+        let check = window.confirm("Are you sure delete this item ?");
+        if (check) {
+            this.props.deleteTask(this.props.task.id);
+            this.props.editTask({
             id : '',
             name : '',
             status : false
         });
+        }
+        else{
+            return;
+        }
+        
     }
 
     onUpdate = () => {

@@ -57,3 +57,17 @@ export const filterTask = (filterValue) => {
         filterValue : filterValue
     }
 }
+
+export const searchTask = (keyword) => {
+    return {
+        type : types.SEARCH_TASK,
+        keyword : keyword
+    }
+}
+
+export const sortTask = (sort) => {
+    return{
+        type : types.SORT_TASK,
+       sort
+    }
+}
